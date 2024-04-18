@@ -1,42 +1,32 @@
 // สร้าง function สำหรับดึงข้อมูลจาก API
-async function authenticateUser(username, password) {
+async function fetchData() {
     try {
         const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1aiXWRejpJnIoVsaUYpOExphBiVbTI1_7-s2_YXYqWK8/values/LoginUser?alt=json&key=AIzaSyBByjB5Nr3CTV4iR6sAcFXwW8M3Q_f0qO8');
         const data = await response.json();
 
         // เลือกเฉพาะข้อมูลที่เราต้องการจาก JSON
-        const users = data.values.slice(1); // เริ่มต้นที่ index 1 เพื่อข้าม header row
-
-        // ตรวจสอบว่ามี username และ password ที่ถูกต้องหรือไม่
-        const authenticatedUser = users.find(user => user[0] === username && user[1] === password);
-
-        if (authenticatedUser) {
-            return authenticatedUser[2]; // ส่งชื่อของผู้ใช้กลับไป
-        } else {
-            return null;
-        }
+        return data.values.slice(1); // เริ่มต้นที่ index 1 เพื่อข้าม header row
     } catch (error) {
-        console.error('Error authenticating user:', error);
-        return null;
+        console.error('Error fetching data:', error);
+        return [];
     }
 }
 
-// รับค่าจากฟอร์มและตรวจสอบการเข้าสู่ระบบ
+// เมื่อมีการ submit form
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
+    event.preventDefault(); // หยุดการส่ง form แบบปกติ
 
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    const loginStatus = document.getElementById('loginStatus');
+    const users = await fetchData();
 
-    const username = await authenticateUser(username, password);
+    const user = users.find(user => user[0] === username && user[1] === password);
 
-    if (username) {
-        loginStatus.textContent = `Login successful! Welcome, ${username}!`;
-        // ทำการเปลี่ยนหน้าไปยัง home.html
-        window.location.href = 'home.html';
+    if (user) {
+        // หากล็อกอินสำเร็จ จะ redirect ไปยังหน้า home.html
+        window.location.href = `home.html?name=${user[2]}`;
     } else {
-        loginStatus.textContent = 'Invalid username or password. Please try again.';
+        alert('Invalid username or password');
     }
 });
