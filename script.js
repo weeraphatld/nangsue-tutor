@@ -1,32 +1,27 @@
-// สร้าง function สำหรับดึงข้อมูลจาก API
-async function fetchData() {
-    try {
-        const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1aiXWRejpJnIoVsaUYpOExphBiVbTI1_7-s2_YXYqWK8/values/LoginUser?alt=json&key=AIzaSyBByjB5Nr3CTV4iR6sAcFXwW8M3Q_f0qO8');
-        const data = await response.json();
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+  event.preventDefault(); // Prevent the form from submitting
 
-        // เลือกเฉพาะข้อมูลที่เราต้องการจาก JSON
-        return data.values.slice(1); // เริ่มต้นที่ index 1 เพื่อข้าม header row
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        return [];
-    }
-}
+  var username = document.getElementById("username").value;
+  var password = document.getElementById("password").value;
 
-// เมื่อมีการ submit form
-document.getElementById('loginForm').addEventListener('submit', async function(event) {
-    event.preventDefault(); // หยุดการส่ง form แบบปกติ
+  fetch("https://sheets.googleapis.com/v4/spreadsheets/1aiXWRejpJnIoVsaUYpOExphBiVbTI1_7-s2_YXYqWK8/values/LoginUser?alt=json&key=AIzaSyBByjB5Nr3CTV4iR6sAcFXwW8M3Q_f0qO8")
+    .then(response => response.json())
+    .then(data => {
+      var users = data.values;
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+      var isAuthenticated = users.some(user => user[0] === username && user[1] === password);
 
-    const users = await fetchData();
-
-    const user = users.find(user => user[0] === username && user[1] === password);
-
-    if (user) {
-        // หากล็อกอินสำเร็จ จะ redirect ไปยังหน้า home.html
-        window.location.href = `home.html?name=${user[2]}`;
-    } else {
-        alert('Invalid username or password');
-    }
+      if (isAuthenticated) {
+        // Save username in Local Storage
+        localStorage.setItem("username", username);
+        // Redirect to home page
+        window.location.href = "home.html";
+      } else {
+        alert("Invalid username or password. Please try again.");
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert("An error occurred while trying to login. Please try again later.");
+    });
 });
