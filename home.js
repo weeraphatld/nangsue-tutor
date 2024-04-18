@@ -1,9 +1,12 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // ดึงชื่อผู้ใช้จาก URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get('username');
+document.addEventListener("DOMContentLoaded", function() {
+  // Check if username exists in Local Storage
+  var username = localStorage.getItem("username");
 
-    // แสดงชื่อผู้ใช้บนหน้าเว็บ
-    const usernameDisplay = document.getElementById('usernameDisplay');
-    usernameDisplay.textContent = `Welcome, ${username}!`;
+  if (username) {
+    // Display welcome message with username
+    document.getElementById("userInfo").innerHTML = "Welcome, " + username + "!";
+  } else {
+    // Redirect to login page if username is not found
+    window.location.href = "index.html";
+  }
 });
