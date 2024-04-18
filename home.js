@@ -1,12 +1,9 @@
-document.addEventListener("DOMContentLoaded", function() {
-  // Check if username exists in Local Storage
-  var username = localStorage.getItem("username");
+window.onload = function() {
+  // Get email from query parameter
+  var queryParams = new URLSearchParams(window.location.search);
+  var email = queryParams.get('email');
 
-  if (username) {
-    // Display welcome message with username
-    document.getElementById("userInfo").innerHTML = "Welcome, " + name + "!";
-  } else {
-    // Redirect to login page if username is not found
-    window.location.href = "index.html";
-  }
-});
+  // Display welcome message
+  var welcomeMessage = document.getElementById('welcomeMessage');
+  welcomeMessage.innerHTML = 'Welcome, ' + email + '!';
+};
