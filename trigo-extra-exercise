@@ -1,1 +1,26 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <base target="_top">
+   </head>
+   <body>
+      <iframe style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0;" src="https://od.lk/s/NzBfMTY1MDMwNTVf/%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%AD%E0%B8%9A%20%E0%B8%A5%E0%B8%B3%E0%B8%94%E0%B8%B1%E0%B8%9A%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AD%E0%B8%99%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B8%A1%20%E0%B8%8A%E0%B8%B1%E0%B9%89%E0%B8%99%20%E0%B8%A1.6.pdf"></iframe>
 
+      <script>
+        // เรียกใช้ฟังก์ชันเมื่อหน้าเว็บโหลดเสร็จ
+        window.onload = function() {
+            // ตรวจสอบ Referer Header ใน request
+            var referer = document.referrer;
+            // กำหนด URL ของเว็บไซต์ที่อนุญาตให้เข้าถึง
+            var allowedURL = "https://facebook.com";
+            // ตรวจสอบว่า Referer URL ตรงกับ URL ที่อนุญาตหรือไม่
+            if (referer !== allowedURL) {
+                // ถ้าไม่ตรง ให้ redirect ไปยังหน้าที่ต้องการ
+                window.location.href = "https://example.com/access-denied.html"; // แก้เป็น URL ของหน้าที่ต้องการให้ redirect ไป
+            }
+        };
+    </script>  
+      </script>
+   </body> 
+</html>
