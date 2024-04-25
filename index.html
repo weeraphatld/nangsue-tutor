@@ -11,6 +11,17 @@
 <h2>Login with Google</h2>
 <div class="g-signin2" data-onsuccess="onSignIn"></div>
 
+<script>
+// เช็คว่าเว็บไซต์ถูกเรียกจาก facebook.com หรือไม่
+if (window.location.hostname !== "facebook.com") {
+    // ถ้าไม่ใช่ ให้ redirect หรือแสดงข้อความแจ้งเตือน
+    // ตัวอย่าง redirect:
+    window.location.replace("ข้อมูล URL ของเว็บไซต์ที่ต้องการให้ redirect ไปที่นั้น");
+    
+    // หรือตัวอย่างแสดงข้อความแจ้งเตือน:
+    // alert("เว็บไซต์นี้ต้องเปิดจาก facebook.com เท่านั้น");
+}
+</script>  
 <script src="login.js"></script>
 </body>
 </html>
