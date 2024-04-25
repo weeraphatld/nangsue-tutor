@@ -1,31 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login with Google</title>
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-<meta name="google-signin-client_id" content="877496944315-csn41s0i2eb5ifhsd1ubi2t4an9153lj.apps.googleusercontent.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button to htj.html</title>
 </head>
 <body>
-<h2>Login with Google</h2>
-<div class="g-signin2" data-onsuccess="onSignIn"></div>
-
+    <button onclick="goToHTJ()">Go to htj.html</button>
 
     <script>
-        // เรียกใช้ฟังก์ชันเมื่อหน้าเว็บโหลดเสร็จ
-        window.onload = function() {
-            // ตรวจสอบ Referer Header ใน request
-            var referer = document.referrer;
-            // กำหนด URL ของเว็บไซต์ที่อนุญาตให้เข้าถึง
-            var allowedURL = "https://weeraphatld.github.io/nangsue-tutor/";
-            // ตรวจสอบว่า Referer URL ตรงกับ URL ที่อนุญาตหรือไม่
-            if (referer !== allowedURL) {
-                // ถ้าไม่ตรง ให้ redirect ไปยังหน้าที่ต้องการ
-                window.location.href = "https://example.com/access-denied.html"; // แก้เป็น URL ของหน้าที่ต้องการให้ redirect ไป
-            }
-        };
-    </script>  
-<script src="login.js"></script>
+        function goToHTJ() {
+            window.location.href = 'trigo-extra-exercise.html';
+        }
+    </script>
 </body>
 </html>
+
+
