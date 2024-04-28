@@ -8,19 +8,39 @@
       <iframe style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0;" src="https://od.lk/s/NzBfMTY1MDMwNTVf/%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%AD%E0%B8%9A%20%E0%B8%A5%E0%B8%B3%E0%B8%94%E0%B8%B1%E0%B8%9A%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AD%E0%B8%99%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B8%A1%20%E0%B8%8A%E0%B8%B1%E0%B9%89%E0%B8%99%20%E0%B8%A1.6.pdf"></iframe>
 
       <script>
-        // เรียกใช้ฟังก์ชันเมื่อหน้าเว็บโหลดเสร็จ
-        window.onload = function() {
-            // ตรวจสอบ Referer Header ใน request
-            var referer = document.referrer;
-            // กำหนด URL ของเว็บไซต์ที่อนุญาตให้เข้าถึง
-            var allowedURL = "https://weeraphatld.github.io/nangsue-tutor/";
-            // ตรวจสอบว่า Referer URL ตรงกับ URL ที่อนุญาตหรือไม่
-            if (referer !== allowedURL) {
-                // ถ้าไม่ตรง ให้ redirect ไปยังหน้าที่ต้องการ
-                window.location.href = "https://example.com/access-denied.html"; // แก้เป็น URL ของหน้าที่ต้องการให้ redirect ไป
-            }
-        };
-    </script>  
+  // กำหนด URL ของ API
+const apiUrl = "https://sheets.googleapis.com/v4/spreadsheets/1aiXWRejpJnIoVsaUYpOExphBiVbTI1_7-s2_YXYqWK8/values/IPAD?alt=json&key=AIzaSyBByjB5Nr3CTV4iR6sAcFXwW8M3Q_f0qO8";
+
+// ฟังก์ชันสำหรับดึงข้อมูลจาก API
+async function fetchAllowedIPs() {
+  const response = await fetch(apiUrl);
+  const data = await response.json();
+  const allowedIPs = data.values.map(row => row[1]); // คอลัมน์ B คือ IP address
+  return allowedIPs;
+}
+
+// รับ IP Address ของผู้ใช้ปัจจุบัน
+const userIP = window.location.hostname; // เปลี่ยนวิธีการรับ IP Address ของผู้ใช้ปัจจุบันหากจำเป็น
+
+// ฟังก์ชันสำหรับตรวจสอบว่า IP Address ของผู้ใช้ปัจจุบันอยู่ในรายการที่อนุญาตหรือไม่
+async function isAllowed() {
+  const allowedIPs = await fetchAllowedIPs();
+  return allowedIPs.includes(userIP);
+}
+
+// แสดงเนื้อหาเว็บไซต์หรือบล็อกการเข้าถึงตาม IP Address ของผู้ใช้
+(async () => {
+  const isAllowed = await isAllowed();
+  if (isAllowed) {
+    // แสดงเนื้อหาเว็บไซต์
+    document.getElementById("websiteContent").style.display = "block";
+  } else {
+    // บล็อกการเข้าถึง
+    document.getElementById("websiteContent").style.display = "none";
+    document.getElementById("blockedMessage").style.display = "block";
+  }
+})();
+
       </script>
    </body> 
 </html>
