@@ -1,4 +1,3 @@
-<!-- home.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,54 +7,46 @@
 </head>
 <body>
   <h1>Welcome to Home Page!</h1>
-  
-  <!-- สร้าง element สำหรับแสดงข้อมูล name และ email -->
-  <div>
-    <p id="name"></p>
-    <p id="email"></p>
+  <div id="userInfo">
+    <!-- ที่นี่จะแสดงข้อมูล name และ email -->
   </div>
 
+  <!-- เพิ่มไฟล์ JavaScript เพื่อดึงข้อมูลของผู้ใช้ -->
   <script>
-    // ดึงค่า parameters จาก URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get('username');
-    const password = urlParams.get('password');
+    document.addEventListener('DOMContentLoaded', function() {
+      // ดึงข้อมูล username และ password จาก Local Storage
+      const loggedInUsername = localStorage.getItem('loggedInUsername');
+      const loggedInPassword = localStorage.getItem('loggedInPassword');
 
-    // ดึงข้อมูลจาก API โดยใช้ fetch
-    fetch('https://sheets.googleapis.com/v4/spreadsheets/1aiXWRejpJnIoVsaUYpOExphBiVbTI1_7-s2_YXYqWK8/values/log?alt=json&key=AIzaSyBByjB5Nr3CTV4iR6sAcFXwW8M3Q_f0qO8')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        // ประมวลผลข้อมูลที่ได้
-        const rows = data.values;
-        let userData = null;
-        rows.forEach(row => {
-          // เช็ค username และ password
-          if (row[0] === username && row[1] === password) {
-            userData = row;
+      // ดึงข้อมูลจาก API
+      fetch('https://sheets.googleapis.com/v4/spreadsheets/1aiXWRejpJnIoVsaUYpOExphBiVbTI1_7-s2_YXYqWK8/values/log?alt=json&key=AIzaSyBByjB5Nr3CTV4iR6sAcFXwW8M3Q_f0qO8')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
           }
-        });
+          return response.json();
+        })
+        .then(data => {
+          // ประมวลผลข้อมูลที่ได้
+          const rows = data.values;
+          rows.forEach(row => {
+            // เช็ค username และ password และดึงข้อมูล name และ email
+            if (row[0] === loggedInUsername && row[1] === loggedInPassword) {
+              const name = row[2];
+              const email = row[3];
 
-        if (userData) {
-          // หากพบข้อมูลของผู้ใช้
-          const name = userData[2];
-          const email = userData[3];
-          
-          // แสดงข้อมูล name และ email บนหน้าเว็บ
-          document.getElementById('name').innerText = `Name: ${name}`;
-          document.getElementById('email').innerText = `Email: ${email}`;
-        } else {
-          // หากไม่พบข้อมูลผู้ใช้
-          console.error('User not found.');
-        }
-      })
-      .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-      });
+              // แสดงข้อมูลในหน้า home
+              document.getElementById('userInfo').innerHTML = `
+                <p>Name: ${name}</p>
+                <p>Email: ${email}</p>
+              `;
+            }
+          });
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+        });
+    });
   </script>
 </body>
 </html>
