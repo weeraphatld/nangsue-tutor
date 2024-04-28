@@ -16,10 +16,26 @@ document.getElementById('login-form').addEventListener('submit', async function(
     const userFound = data.values.some(row => row[0] === username && row[1] === password);
     if (userFound) {
       // ล็อกอินสำเร็จ
-      window.location.href = 'home.html';
+      Swal.fire({
+        icon: 'success',
+        title: 'เข้าสู่ระบบสำเร็จ!',
+        text: 'กำลังเปลี่ยนไปยังหน้าหลัก...',
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+        willClose: () => {
+          window.location.href = 'home.html';
+        }
+      });
     } else {
       // ล็อกอินไม่สำเร็จ
-      alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+      Swal.fire({
+        icon: 'error',
+        title: 'ล็อกอินไม่สำเร็จ',
+        text: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
+      });
     }
   } catch (error) {
     console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
