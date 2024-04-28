@@ -1,46 +1,50 @@
 <!DOCTYPE html>
-<html>
-   <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <base target="_top">
-   </head>
-   <body>
-      <iframe style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0;" src="https://od.lk/s/NzBfMTY1MDMwNTVf/%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%AD%E0%B8%9A%20%E0%B8%A5%E0%B8%B3%E0%B8%94%E0%B8%B1%E0%B8%9A%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AD%E0%B8%99%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B8%A1%20%E0%B8%8A%E0%B8%B1%E0%B9%89%E0%B8%99%20%E0%B8%A1.6.pdf"></iframe>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Restriction</title>
+</head>
+<body>
+    <h1>IP Restriction Example</h1>
+    <p id="status"></p>
 
-      <script>
-// สร้างฟังก์ชันสำหรับเรียก API และตรวจสอบ IP address
-function checkIpAddress() {
-    var apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1aiXWRejpJnIoVsaUYpOExphBiVbTI1_7-s2_YXYqWK8/values/IPAD?alt=json&key=AIzaSyBByjB5Nr3CTV4iR6sAcFXwW8M3Q_f0qO8'; // ใส่ YOUR_API_KEY ที่เป็น API key ของคุณ
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            var ipAddressAllowed = false;
-            var ipAddress = getUserIpAddress(); // ฟังก์ชัน getUserIpAddress() จะต้องถูกสร้างเพื่อให้สามารถดึง IP address ของผู้ใช้งานได้
-            data.values.forEach(row => {
-                if (row[1] === ipAddress) { // ตรวจสอบว่า IP address ของผู้ใช้งานตรงกับที่อนุญาตให้เข้าถึงหรือไม่
-                    ipAddressAllowed = true;
+    <script>
+        // Function to fetch data from the provided API
+        async function fetchData() {
+            const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1aiXWRejpJnIoVsaUYpOExphBiVbTI1_7-s2_YXYqWK8/values/IPAD?alt=json&key=AIzaSyBByjB5Nr3CTV4iR6sAcFXwW8M3Q_f0qO8');
+            const data = await response.json();
+            return data;
+        }
+
+        // Function to check if the IP Address is allowed
+        async function checkIP() {
+            try {
+                // Get the user IP Address
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                const userIP = data.ip;
+
+                // Fetch data from the API
+                const spreadsheetData = await fetchData();
+
+                // Extract IPv4 addresses from the data
+                const allowedIPs = spreadsheetData.values.map(row => row[1]);
+
+                // Check if the user's IP is in the allowed list
+                if (allowedIPs.includes(userIP)) {
+                    document.getElementById('status').innerText = 'Access Granted';
+                } else {
+                    document.getElementById('status').innerText = 'Access Denied';
+                    // You can redirect or block access here
                 }
-            });
-            if (ipAddressAllowed) {
-                // IP address ถูกอนุญาตให้เข้าถึงเว็บไซต์
-                // ทำสิ่งที่ต้องการ เช่น แสดงเนื้อหาหรือโหลดเว็บไซต์
-            } else {
-                // IP address ไม่ได้รับอนุญาตให้เข้าถึงเว็บไซต์
-                blockAccess(); // ฟังก์ชัน blockAccess() จะต้องถูกสร้างเพื่อบล็อคการเข้าถึงเว็บไซต์
+            } catch (error) {
+                console.error('Error:', error);
             }
-        })
-        .catch(error => console.error('Error fetching data:', error));
-}
+        }
 
-// ฟังก์ชันสำหรับดึง IP address ของผู้ใช้งาน
-function getUserIpAddress() {
-    // โค้ดเพื่อดึง IP address ของผู้ใช้งาน
-    // ใช้วิธีใดก็ได้ที่เหมาะสม เช่น การใช้งาน API หรือการดึงจาก HTTP header
-}
-
-// เรียกใช้งานฟังก์ชันเมื่อโหลดหน้าเว็บ
-window.onload = checkIpAddress;
-
-      </script>
-   </body> 
+        // Call the function to check IP when the page loads
+        window.onload = checkIP;
+    </script>
+</body>
 </html>
