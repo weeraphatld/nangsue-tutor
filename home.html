@@ -15,10 +15,8 @@
   </div>
 
   <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // ดึงข้อมูล name และ email จาก sessionStorage
-  const name = sessionStorage.getItem('name');
-  const email = sessionStorage.getItem('email');
+    const name = sessionStorage.getItem('name');
+    const email = sessionStorage.getItem('email');
 
   // แสดงข้อมูล name และ email บนหน้า home.html
   document.getElementById('name').textContent = name;
