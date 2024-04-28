@@ -48,12 +48,12 @@
             if (row[0] === username && row[1] === password) {
               isLoggedIn = true;
               // หากเข้าสู่ระบบสำเร็จ แสดง SweetAlert
-           Swal.fire({
-        icon: 'success',
-        title: 'พบข้อมูล',
-        showConfirmButton: false,
-        timer: 2000,
-        onClose: () => {
+              swal({
+                title: "Login Success!",
+                text: "You will be redirected to home page.",
+                icon: "success",
+                button: "OK",
+              }).then(() => {
                 // เก็บข้อมูล name และ email ใน localStorage
                 localStorage.setItem('name', row[2]);
                 localStorage.setItem('email', row[3]);
@@ -64,12 +64,12 @@
           });
           if (!isLoggedIn) {
             // หากไม่สำเร็จแสดง SweetAlert แจ้งเตือน
-      Swal.fire({
-        icon: 'error',
-        title: 'ไม่พบข้อมูล',
-        timer: 2000,
-        showConfirmButton: false
-      });
+            swal({
+              title: "Login Failed!",
+              text: "Invalid username or password.",
+              icon: "error",
+              button: "OK",
+            });
           }
         })
         .catch(error => {
@@ -79,6 +79,5 @@
   </script>
   <!-- Link เข้ารหัสเว็บไซต์เพื่อใช้งาน SweetAlert -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </body>
 </html>
