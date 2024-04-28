@@ -54,10 +54,11 @@
                 icon: "success",
                 button: "OK",
               }).then(() => {
-                // Redirect ไปยังหน้า home.html พร้อมส่งค่า name และ email ผ่าน URL parameters
-                const name = row[2];
-                const email = row[3];
-                window.location.href = `home.html?name=${name}&email=${email}`;
+                // เก็บข้อมูล name และ email ใน localStorage
+                localStorage.setItem('name', row[2]);
+                localStorage.setItem('email', row[3]);
+                // Redirect ไปยังหน้า home.html
+                window.location.href = "home.html";
               });
             }
           });
