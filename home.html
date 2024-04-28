@@ -15,25 +15,23 @@
   </div>
 
   <script>
-       // ฟังก์ชันสำหรับตรวจสอบการล็อกอิน
-    function checkLogin() {
-      const isLoggedIn = localStorage.getItem('isLoggedIn');
-      if (!isLoggedIn || isLoggedIn !== 'true') {
-        // หากไม่ได้ล็อกอิน ให้ redirect ไปที่หน้า index.html
-        window.location.href = 'songtangnong.html';
+    // ฟังก์ชันสำหรับตรวจสอบการล็อกอิน
+    function checkLoginStatus() {
+      const name = localStorage.getItem('name');
+      const email = localStorage.getItem('email');
+
+      // ถ้าไม่มีข้อมูล name หรือ email ใน localStorage ให้ redirect ไปยังหน้า index.html
+      if (!name || !email) {
+        window.location.href = "songtangnong.html";
       }
+
+      // แสดงข้อมูล name และ email บนหน้า home.html
+      document.getElementById('name').textContent = name;
+      document.getElementById('email').textContent = email;
     }
 
-    // เรียกใช้ฟังก์ชันเมื่อโหลดหน้า
-    checkLogin();
-    
-    // ดึงข้อมูล name และ email จาก localStorage
-    const name = localStorage.getItem('name');
-    const email = localStorage.getItem('email');
-
-    // แสดงข้อมูล name และ email บนหน้า home.html
-    document.getElementById('name').textContent = name;
-    document.getElementById('email').textContent = email;
+    // เรียกใช้งานฟังก์ชันเมื่อหน้า home.html โหลดเสร็จ
+    checkLoginStatus();
   </script>
 </body>
 </html>
