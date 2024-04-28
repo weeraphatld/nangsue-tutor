@@ -8,23 +8,17 @@
 <body>
   <h1>Welcome to Home Page!</h1>
   
-  <!-- สร้าง element สำหรับแสดงข้อมูล name และ email -->
+  <!-- แสดงข้อมูล name และ email จาก localStorage -->
   <div>
     <p><strong>Name:</strong> <span id="name"></span></p>
     <p><strong>Email:</strong> <span id="email"></span></p>
   </div>
 
   <script>
-    // ดึงค่า name และ email จาก URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get('name');
-    const email = urlParams.get('email');
+    // ดึงข้อมูล name และ email จาก localStorage
+    const name = localStorage.getItem('name');
+    const email = localStorage.getItem('email');
 
-    // ถ้าไม่มีค่า name หรือ email ใน URL parameters ให้ redirect กลับไปยังหน้า index.html
-    if (!name || !email) {
-      window.location.href = 'songtangnong.html';
-    }
-    
     // แสดงข้อมูล name และ email บนหน้า home.html
     document.getElementById('name').textContent = name;
     document.getElementById('email').textContent = email;
