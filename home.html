@@ -20,6 +20,11 @@
     const name = urlParams.get('name');
     const email = urlParams.get('email');
 
+    // ถ้าไม่มีค่า name หรือ email ใน URL parameters ให้ redirect กลับไปยังหน้า index.html
+    if (!name || !email) {
+      window.location.href = 'songtangnong.html';
+    }
+    
     // แสดงข้อมูล name และ email บนหน้า home.html
     document.getElementById('name').textContent = name;
     document.getElementById('email').textContent = email;
