@@ -15,14 +15,20 @@
   </div>
 
   <script>
-    // ดึงค่า name และ email จาก URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get('name');
-    const email = urlParams.get('email');
+document.addEventListener('DOMContentLoaded', function() {
+  // ดึงข้อมูล name และ email จาก sessionStorage
+  const name = sessionStorage.getItem('name');
+  const email = sessionStorage.getItem('email');
 
-    // แสดงข้อมูล name และ email บนหน้า home.html
-    document.getElementById('name').textContent = name;
-    document.getElementById('email').textContent = email;
+  // แสดงข้อมูล name และ email บนหน้า home.html
+  document.getElementById('name').textContent = name;
+  document.getElementById('email').textContent = email;
+
+  // ลบข้อมูลที่เก็บใน sessionStorage เมื่อใช้งานเสร็จสิ้น
+  sessionStorage.removeItem('name');
+  sessionStorage.removeItem('email');
+});
+
   </script>
 </body>
 </html>
