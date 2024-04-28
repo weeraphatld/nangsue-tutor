@@ -15,6 +15,18 @@
   </div>
 
   <script>
+       // ฟังก์ชันสำหรับตรวจสอบการล็อกอิน
+    function checkLogin() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      if (!isLoggedIn || isLoggedIn !== 'true') {
+        // หากไม่ได้ล็อกอิน ให้ redirect ไปที่หน้า index.html
+        window.location.href = 'songtangnong.html';
+      }
+    }
+
+    // เรียกใช้ฟังก์ชันเมื่อโหลดหน้า
+    checkLogin();
+    
     // ดึงข้อมูล name และ email จาก localStorage
     const name = localStorage.getItem('name');
     const email = localStorage.getItem('email');
