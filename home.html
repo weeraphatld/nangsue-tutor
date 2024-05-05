@@ -113,6 +113,7 @@
         <td class="fs-6"><a href="https://drive.google.com/file/d/1Zmu5vIOWPr9GO-3kqDVoets6MPOgDBHb/view?usp=drive_link" target="_blank">คลิกที่นี่</a></td>
         <td class="fs-6 sdvi">เอาไว้ทำงานส่งครู(เผื่อครูสั่ง)</td>
       </tr>  
+      <button onclick="logout()" class="btn btn-danger mt-3">ออกจากระบบ</button>
     </tbody>
   </table>
 
@@ -135,5 +136,14 @@
     // เรียกใช้งานฟังก์ชันเมื่อหน้า home.html โหลดเสร็จ
     checkLoginStatus();
   </script>
+  <script>
+    function logout() {
+        // ลบข้อมูลใน localStorage
+        localStorage.removeItem('name');
+        localStorage.removeItem('email');
+        // Redirect ไปยังหน้า songtangnong.html
+        window.location.href = "songtangnong.html";
+    }
+</script>
 </body>
 </html>
