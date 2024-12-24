@@ -93,7 +93,7 @@
     let removedBoxes = []; // เก็บข้อมูลกล่องที่ถูกนำออก
 
     // ฟังก์ชันดึงข้อมูลจาก Google Sheets API
-    fetch('https://sheets.googleapis.com/v4/spreadsheets/1P2Rb8hkBX-OyqFX6yv6Z9_NA1ArUMdb7ds-TKv4k5HA/values/boxjum?alt=json&key=AIzaSyAD_aNO81AEscbG0Ij-krW7neHe6FebBDE')
+    fetch('https://sheets.googleapis.com/v4/spreadsheets/1nFnwy6o4BB3WEWMnv6Or7ZLLZUETM83-ktoF8sFf6A8/values/box?alt=json&key=AIzaSyAD_aNO81AEscbG0Ij-krW7neHe6FebBDE')
         .then(response => response.json())
         .then(data => {
             boxes = data.values.slice(1); // ตัดแถวแรกออก (ส่วนหัวของตาราง)
