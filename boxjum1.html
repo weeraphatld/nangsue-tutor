@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กล่องจุ่มหรรษา</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .shuffle-button {
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #ff69b4;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .shuffle-button:hover {
+            background-color: #ff1493;
+        }
+        .box-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .box {
+            width: 150px;
+            height: 150px;
+            background-image: url('https://i.ibb.co/XzBNR20/167-1.png');
+            background-size: cover;
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        @keyframes shuffleAnimation {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(-20px); }
+            50% { transform: translateY(20px); }
+            75% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        .shuffling {
+            animation: shuffleAnimation 1s ease-in-out infinite;
+        }
+        @keyframes openBox {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .box.opening {
+            animation: openBox 0.5s ease-in-out forwards;
+        }
+        
+        .sweetalert-image {
+        object-fit: cover; /* ทำให้ภาพครอปเพื่อให้ได้สัดส่วน 1:1 */
+        width: 100%;
+        height: 100%;
+    }
+    </style>
+</head>
+<body>
+
+<h1>กล่องจุ่มหรรษา</h1>
+<button class="shuffle-button" onclick="shuffleBoxes()">สับกล่อง</button>
+<div class="box-container" id="box-container"></div>
+
+<script>
+    let boxes = []; // เก็บข้อมูลกล่องทั้งหมด
+    let removedBoxes = []; // เก็บข้อมูลกล่องที่ถูกนำออก
+
+    // ฟังก์ชันดึงข้อมูลจาก Google Sheets API
+    fetch('https://sheets.googleapis.com/v4/spreadsheets/1P2Rb8hkBX-OyqFX6yv6Z9_NA1ArUMdb7ds-TKv4k5HA/values/boxjum?alt=json&key=AIzaSyAD_aNO81AEscbG0Ij-krW7neHe6FebBDE')
+        .then(response => response.json())
+        .then(data => {
+            boxes = data.values.slice(1); // ตัดแถวแรกออก (ส่วนหัวของตาราง)
+            renderBoxes();
+        })
+        .catch(error => console.error('Error:', error));
+
+    // ฟังก์ชันสำหรับแสดงกล่อง
+    function renderBoxes() {
+        const boxContainer = document.getElementById('box-container');
+        boxContainer.innerHTML = ''; // ล้างกล่องทั้งหมดก่อน
+
+        boxes.forEach(box => {
+            // ตรวจสอบว่ากล่องนี้ถูกนำออกแล้วหรือไม่
+            if (!removedBoxes.includes(box[0])) {
+                const boxElement = document.createElement('div');
+                boxElement.className = 'box';
+                boxElement.addEventListener('click', () => {
+                    boxElement.classList.add('opening');
+                    setTimeout(() => {
+                        Swal.fire({
+                            title: `ID : ${box[0]}`,
+                            text: `${box[1]}`,
+                            imageUrl: box[2],
+                            imageWidth: 200,
+                            imageHeight: 200,
+                            imageAlt: 'Box Image',
+                            customClass: {
+                                image: 'sweetalert-image'
+                            },
+                            showCancelButton: true,
+                            confirmButtonText: 'นำออก',
+                            cancelButtonText: 'ปิด'
+                        }).then(result => {
+                            boxElement.classList.remove('opening');
+                            if (result.isConfirmed) {
+                                removedBoxes.push(box[0]); // เพิ่ม ID ของกล่องที่ถูกนำออก
+                                renderBoxes(); // รีเรนเดอร์กล่องใหม่
+                            }
+                        });
+                    }, 500); // Delay for animation
+                });
+                boxContainer.appendChild(boxElement);
+            }
+        });
+    }
+
+    // ฟังก์ชันสำหรับสับเปลี่ยนตำแหน่งกล่อง
+    function shuffleBoxes() {
+        const boxContainer = document.getElementById('box-container');
+        boxContainer.classList.add('shuffling');
+        setTimeout(() => {
+            for (let i = boxes.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [boxes[i], boxes[j]] = [boxes[j], boxes[i]];
+            }
+            renderBoxes();
+            boxContainer.classList.remove('shuffling');
+        }, 1000); // ช่วงเวลาของการสับเปลี่ยน
+    }
+</script>
+
+
+</body>
+</html>
