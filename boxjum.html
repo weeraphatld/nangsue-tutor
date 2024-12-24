@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Box</title>
+    <title>กล่องจุ่มหรรษา</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
@@ -84,12 +84,13 @@
 </head>
 <body>
 
-<h1>กล่องจุ่ม by ครู นส.</h1>
+<h1>กล่องจุ่มหรรษา</h1>
 <button class="shuffle-button" onclick="shuffleBoxes()">สับกล่อง</button>
 <div class="box-container" id="box-container"></div>
 
 <script>
-    let boxes = [];
+    let boxes = []; // เก็บข้อมูลกล่องทั้งหมด
+    let removedBoxes = []; // เก็บข้อมูลกล่องที่ถูกนำออก
 
     // ฟังก์ชันดึงข้อมูลจาก Google Sheets API
     fetch('https://sheets.googleapis.com/v4/spreadsheets/1P2Rb8hkBX-OyqFX6yv6Z9_NA1ArUMdb7ds-TKv4k5HA/values/boxjum?alt=json&key=AIzaSyAD_aNO81AEscbG0Ij-krW7neHe6FebBDE')
@@ -106,27 +107,37 @@
         boxContainer.innerHTML = ''; // ล้างกล่องทั้งหมดก่อน
 
         boxes.forEach(box => {
-            const boxElement = document.createElement('div');
-            boxElement.className = 'box';
-            boxElement.addEventListener('click', () => {
-                boxElement.classList.add('opening');
-                setTimeout(() => {
-                    Swal.fire({
-    title: `ID : ${box[0]}`,
-    text: `${box[1]}`,
-    imageUrl: box[2],
-    imageWidth: 200,
-    imageHeight: 200, // ปรับขนาดเป็น 1:1
-    imageAlt: 'Box Image',
-    customClass: {
-        image: 'sweetalert-image'
-    }
-                    }).then(() => {
-                        boxElement.classList.remove('opening');
-                    });
-                }, 500); // Delay for animation
-            });
-            boxContainer.appendChild(boxElement);
+            // ตรวจสอบว่ากล่องนี้ถูกนำออกแล้วหรือไม่
+            if (!removedBoxes.includes(box[0])) {
+                const boxElement = document.createElement('div');
+                boxElement.className = 'box';
+                boxElement.addEventListener('click', () => {
+                    boxElement.classList.add('opening');
+                    setTimeout(() => {
+                        Swal.fire({
+                            title: `ID : ${box[0]}`,
+                            text: `${box[1]}`,
+                            imageUrl: box[2],
+                            imageWidth: 200,
+                            imageHeight: 200,
+                            imageAlt: 'Box Image',
+                            customClass: {
+                                image: 'sweetalert-image'
+                            },
+                            showCancelButton: true,
+                            confirmButtonText: 'นำออก',
+                            cancelButtonText: 'ปิด'
+                        }).then(result => {
+                            boxElement.classList.remove('opening');
+                            if (result.isConfirmed) {
+                                removedBoxes.push(box[0]); // เพิ่ม ID ของกล่องที่ถูกนำออก
+                                renderBoxes(); // รีเรนเดอร์กล่องใหม่
+                            }
+                        });
+                    }, 500); // Delay for animation
+                });
+                boxContainer.appendChild(boxElement);
+            }
         });
     }
 
@@ -144,6 +155,7 @@
         }, 1000); // ช่วงเวลาของการสับเปลี่ยน
     }
 </script>
+
 
 </body>
 </html>
